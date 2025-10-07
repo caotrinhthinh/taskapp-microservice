@@ -60,4 +60,17 @@ const startServer = async () => {
   }
 };
 
+// Graceful shutdown
+// process.on("SIGTERM", async () => {
+//   console.log("SIGTERM signal received: closing HTTP server");
+//   await closeConnection();
+//   process.exit(0);
+// });
+
+// process.on("SIGINT", async () => {
+//   console.log("SIGINT signal received: closing HTTP server");
+//   await closeConnection();
+//   process.exit(0);
+// });
+
 startServer();
