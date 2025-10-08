@@ -57,23 +57,51 @@ export const getTaskById = async (req, res) => {
 // POST /api/tasks
 export const createTask = async (req, res) => {
   try {
-    const { title, description, userId, status, tags } = req.body;
-    if (!title || !description || !userId) {
+    // ✅ In log để đảm bảo body thực sự có dữ liệu
+    console.log("📥 Incoming task body:", req.body);
+
+    const { title, description, userId, status, tags, ...rest } = req.body;
+
+    // ✅ Kiểm tra input
+    if (!title?.trim() || !description?.trim() || !userId) {
       return res.status(400).json({
         success: false,
-        message: "Title, description, and userId are required",
+        message: "Missing required fields: title, description, or userId",
+        received: req.body, // 👈 giúp debug dễ
       });
     }
 
-    const newTask = await taskService.createTask(req.body);
-    res.status(201).json({
+    // ✅ Gửi sang service tạo task
+    const newTask = await taskService.createTask({
+      title: title.trim(),
+      description: description.trim(),
+      userId,
+      status,
+      tags,
+      ...rest,
+    });
+
+    return res.status(201).json({
       success: true,
       message: "Task created successfully",
       data: newTask,
     });
   } catch (error) {
-    logger.error("Error in createTask:", error);
-    res.status(500).json({
+    // ✅ Hiển thị lỗi chi tiết (đặc biệt khi lỗi từ Mongoose)
+    console.error("❌ Error in createTask:", error);
+
+    if (error.name === "ValidationError") {
+      const validationErrors = Object.values(error.errors).map(
+        (err) => err.message
+      );
+      return res.status(400).json({
+        success: false,
+        message: "Validation error",
+        errors: validationErrors,
+      });
+    }
+
+    return res.status(500).json({
       success: false,
       message: "Internal server error",
       error: error.message,

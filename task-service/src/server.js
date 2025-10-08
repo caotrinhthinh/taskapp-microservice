@@ -10,10 +10,9 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 8082;
 
-// Middleware to parse JSON requests
-app.use(express.json());
-app.use(cors()); // Parse JSON bodies
-app.use(express.urlencoded({ extended: true })); // Parse URL-encoded bodies
+app.use(express.json()); // Cho phép gọi API từ frontend khác domain
+app.use(cors()); // Cho phép đọc body JSON
+app.use(express.urlencoded({ extended: true })); // Cho phép đọc form URL-encoded
 
 // Routes
 app.use("/api/tasks", taskRoutes);

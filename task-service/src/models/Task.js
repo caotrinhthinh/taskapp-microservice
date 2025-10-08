@@ -67,7 +67,7 @@ taskSchema.index({ userId: 1 });
 taskSchema.index({ createAt: -1 });
 
 // Virtual đẻ format dueDate
-tasksSchema.virtual("isOverdue").get(function () {
+taskSchema.virtual("isOverdue").get(function () {
   return (
     this.dueDate && this.dueDate < new Date() && this.status !== "COMPLETED"
   );
