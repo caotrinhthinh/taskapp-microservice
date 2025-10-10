@@ -1,6 +1,8 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
+import connectDatabase from "./config/database.js";
+import notificationRoutes from "./routes/notificationRoutes.js";
 
 dotenv.config();
 
@@ -10,6 +12,8 @@ const PORT = process.env.PORT || 8083;
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/notifications", notificationRoutes);
 
 app.get("/health", (req, res) => {
   res.status(200).json({
@@ -37,6 +41,8 @@ app.use((err, req, res, next) => {
 
 const startServer = async () => {
   try {
+    await connectDatabase();
+
     app.listen(PORT, () => {
       console.log(`🚀 Notification Service is running on port ${PORT}`);
       console.log(`📍 Health check: http://localhost:${PORT}/health`);
@@ -49,5 +55,17 @@ const startServer = async () => {
     process.exit(1);
   }
 };
+
+// process.on("SIGTERM", async () => {
+//   console.log("SIGTERM signal received");
+//   await closeConnection();
+//   process.exit(0);
+// });
+
+// process.on("SIGINT", async () => {
+//   console.log("SIGINT signal received");
+//   await closeConnection();
+//   process.exit(0);
+// });
 
 startServer();
