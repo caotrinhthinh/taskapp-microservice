@@ -16,6 +16,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 @Entity
 @Table(name = "users")
@@ -27,7 +28,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "User is required")
+    @NotBlank(message = "Username is required")
     @Column(unique = true, nullable = false, length = 50)
     private String username;
 
@@ -36,15 +37,16 @@ public class User {
     @Column(unique = true, nullable = false, length = 100)
     private String email;
 
-    @NotBlank(message = "Email is required")
+    @NotBlank(message = "Full name is required")
     @Column(name = "full_name", nullable = false, length = 100)
     private String fullName;
 
     @NotBlank(message = "Password is required")
+    @Size(min = 6, message = "Password must be at least 6 characters")
     @Column(nullable = false)
     private String password;
 
-    @Column(name = "is_active")
+    @Column(name = "is_active", nullable = false)
     private Boolean isActive = true;
 
     @CreationTimestamp
@@ -53,5 +55,5 @@ public class User {
 
     @UpdateTimestamp
     @Column(name = "updated_at")
-    private LocalDateTime updateAt;
+    private LocalDateTime updatedAt;
 }
