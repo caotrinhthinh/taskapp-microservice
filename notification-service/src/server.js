@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDatabase from "./config/database.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import { connectRabbitMQ } from "./config/rabbitmq.js";
+import { startUserEventConsumer } from "./consumers/eventConsumers.js";
 
 dotenv.config();
 
@@ -42,6 +44,8 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     await connectDatabase();
+    await connectRabbitMQ();
+    await startUserEventConsumer();
 
     app.listen(PORT, () => {
       console.log(`🚀 Notification Service is running on port ${PORT}`);

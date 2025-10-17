@@ -55,5 +55,12 @@ const handleUserEvent = async (event) => {
         console.log("Unknown user event type:", eventType);
         return;
     }
-  } catch (error) {}
+    if (notification) {
+      await notification.save();
+      console.log(`Notification created for user ${userId}`);
+    }
+  } catch (error) {
+    console.log("Error handling user event: ", error);
+    throw error;
+  }
 };
