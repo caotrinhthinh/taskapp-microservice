@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 import taskRoutes from "./routes/taskRoutes.js";
 import connectDatabase from "./config/database.js";
+import { connectRabbitMQ } from "config/rabbitmq.js";
+import { startUserEventConsumer } from "consumers/userEventConsumer.js";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -47,6 +49,9 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     await connectDatabase(); // Connect to MongoDB
+    await connectRabbitMQ();
+    await startUserEventConsumer();
+
     // 4. Start Express server
     app.listen(PORT, () => {
       console.log(`🚀 Task Service is running on port ${PORT}`);

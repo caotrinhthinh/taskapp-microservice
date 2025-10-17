@@ -4,7 +4,10 @@ import dotenv from "dotenv";
 import connectDatabase from "./config/database.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
 import { connectRabbitMQ } from "./config/rabbitmq.js";
-import { startUserEventConsumer } from "./consumers/eventConsumers.js";
+import {
+  startTaskEventConsumer,
+  startUserEventConsumer,
+} from "./consumers/eventConsumers.js";
 
 dotenv.config();
 
@@ -46,6 +49,7 @@ const startServer = async () => {
     await connectDatabase();
     await connectRabbitMQ();
     await startUserEventConsumer();
+    await startTaskEventConsumer();
 
     app.listen(PORT, () => {
       console.log(`🚀 Notification Service is running on port ${PORT}`);

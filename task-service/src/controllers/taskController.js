@@ -57,12 +57,12 @@ export const getTaskById = async (req, res) => {
 // POST /api/tasks
 export const createTask = async (req, res) => {
   try {
-    // ✅ In log để đảm bảo body thực sự có dữ liệu
-    console.log("📥 Incoming task body:", req.body);
+    // In log để đảm bảo body thực sự có dữ liệu
+    console.log("Incoming task body:", req.body);
 
     const { title, description, userId, status, tags, ...rest } = req.body;
 
-    // ✅ Kiểm tra input
+    // Kiểm tra input
     if (!title?.trim() || !description?.trim() || !userId) {
       return res.status(400).json({
         success: false,
@@ -71,7 +71,7 @@ export const createTask = async (req, res) => {
       });
     }
 
-    // ✅ Gửi sang service tạo task
+    // Gửi sang service tạo task
     const newTask = await taskService.createTask({
       title: title.trim(),
       description: description.trim(),
@@ -87,8 +87,8 @@ export const createTask = async (req, res) => {
       data: newTask,
     });
   } catch (error) {
-    // ✅ Hiển thị lỗi chi tiết (đặc biệt khi lỗi từ Mongoose)
-    console.error("❌ Error in createTask:", error);
+    //  Hiển thị lỗi chi tiết (đặc biệt khi lỗi từ Mongoose)
+    console.error("Error in createTask:", error);
 
     if (error.name === "ValidationError") {
       const validationErrors = Object.values(error.errors).map(
