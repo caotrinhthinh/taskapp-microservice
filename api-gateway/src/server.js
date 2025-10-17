@@ -10,7 +10,6 @@ const PORT = process.env.PORT || 8080;
 
 // Middlewares
 app.use(cors());
-app.use(express.json());
 
 // Logging middleware
 app.use((req, res, next) => {
@@ -39,9 +38,7 @@ app.use(
   createProxyMiddleware({
     target: process.env.USER_SERVICE_URL,
     changeOrigin: true,
-    pathRewrite: {
-      "^/api/users": "/api/users",
-    },
+    logLevel: "debug",
     onProxyReq: (proxyReq, req, res) => {
       console.log(`→ Proxying to User Service: ${req.method} ${req.url}`);
     },
@@ -49,7 +46,7 @@ app.use(
       console.log(`← Response from User Service: ${proxyRes.statusCode}`);
     },
     onError: (err, req, res) => {
-      console.error("❌ User Service Proxy Error:", err.message);
+      console.error("User Service Proxy Error:", err.message);
       res.status(503).json({
         success: false,
         message: "User Service is unavailable",
@@ -66,7 +63,7 @@ app.use(
     target: process.env.TASK_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
-      "^/api/tasks": "/api/tasks",
+      "^/api/tasks": "",
     },
     onProxyReq: (proxyReq, req, res) => {
       console.log(`→ Proxying to Task Service: ${req.method} ${req.url}`);
@@ -92,7 +89,7 @@ app.use(
     target: process.env.NOTIFICATION_SERVICE_URL,
     changeOrigin: true,
     pathRewrite: {
-      "^/api/notifications": "/api/notifications",
+      "^/api/notifications": "",
     },
     onProxyReq: (proxyReq, req, res) => {
       console.log(
@@ -105,7 +102,7 @@ app.use(
       );
     },
     onError: (err, req, res) => {
-      console.error("❌ Notification Service Proxy Error:", err.message);
+      console.error("Notification Service Proxy Error:", err.message);
       res.status(503).json({
         success: false,
         message: "Notification Service is unavailable",
@@ -133,6 +130,8 @@ app.use((err, req, res, next) => {
     error: err.message,
   });
 });
+
+app.use(express.json());
 
 // Start server
 app.listen(PORT, () => {

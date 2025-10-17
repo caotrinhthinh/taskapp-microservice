@@ -10,19 +10,19 @@ const connectDatabase = async () => {
       socketTimeoutMS: 45000, // Timeout cho socket
     });
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
 
     // Log khi connection bị disconnect
     mongoose.connection.on("disconnected", () => {
-      console.log("❌ MongoDB Disconnected");
+      console.log("MongoDB Disconnected");
     });
 
     // Log khi có lỗi
     mongoose.connection.on("error", (err) => {
-      console.error("❌ MongoDB Error:", err);
+      console.error("MongoDB Error:", err);
     });
   } catch (error) {
-    console.error(`❌ MongoDB Connection Error: ${error.message}`);
+    console.error(`MongoDB Connection Error: ${error.message}`);
     process.exit(1); // Exit process nếu không connect được
   }
 };

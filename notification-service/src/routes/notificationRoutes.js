@@ -3,6 +3,9 @@ import {
   getAllNotifications,
   getNotificationById,
   getNotificationsByUserId,
+  markAsRead,
+  markAllAsRead,
+  deleteNotification,
 } from "../services/notificationService.js";
 
 const router = express.Router();
