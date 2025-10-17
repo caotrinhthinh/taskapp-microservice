@@ -10,17 +10,17 @@ const connectDatabase = async () => {
 
     console.log(`${process.env.MONGODB_URI}`);
 
-    console.log(`✅ MongoDB Connected: ${conn.connection.host}`);
+    console.log(`MongoDB Connected: ${conn.connection.host}`);
 
     mongoose.connection.on("disconnected", () => {
-      console.log("❌ MongoDB Disconnected");
+      console.log("MongoDB Disconnected");
     });
 
     mongoose.connection.on("error", (err) => {
-      console.error("❌ MongoDB Error:", err);
+      console.error("MongoDB Error:", err);
     });
   } catch (error) {
-    console.error(`❌ MongoDB Connection Error: ${error.message}`);
+    console.error(`MongoDB Connection Error: ${error.message}`);
     process.exit(1);
   }
 };
