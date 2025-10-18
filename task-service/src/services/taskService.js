@@ -1,4 +1,4 @@
-import { publishMessage } from "config/rabbitmq.js";
+import { publishMessage } from "../config/rabbitmq.js";
 import Task from "../models/Task.js";
 
 export const getAllTasks = async (filter = {}) => {

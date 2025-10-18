@@ -3,7 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDatabase from "./config/database.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
-import { connectRabbitMQ } from "./config/rabbitmq.js";
+import { connectRabbitMQ, closeConnection } from "./config/rabbitmq.js";
 import {
   startTaskEventConsumer,
   startUserEventConsumer,
@@ -64,16 +64,16 @@ const startServer = async () => {
   }
 };
 
-// process.on("SIGTERM", async () => {
-//   console.log("SIGTERM signal received");
-//   await closeConnection();
-//   process.exit(0);
-// });
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM signal received");
+  await closeConnection();
+  process.exit(0);
+});
 
-// process.on("SIGINT", async () => {
-//   console.log("SIGINT signal received");
-//   await closeConnection();
-//   process.exit(0);
-// });
+process.on("SIGINT", async () => {
+  console.log("SIGINT signal received");
+  await closeConnection();
+  process.exit(0);
+});
 
 startServer();

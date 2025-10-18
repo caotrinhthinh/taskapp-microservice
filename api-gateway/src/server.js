@@ -62,9 +62,9 @@ app.use(
   createProxyMiddleware({
     target: process.env.TASK_SERVICE_URL,
     changeOrigin: true,
-    pathRewrite: {
-      "^/api/tasks": "",
-    },
+    // pathRewrite: {
+    //   "^/api/tasks": "",
+    // },
     onProxyReq: (proxyReq, req, res) => {
       console.log(`→ Proxying to Task Service: ${req.method} ${req.url}`);
     },

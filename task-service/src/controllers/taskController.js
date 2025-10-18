@@ -67,7 +67,7 @@ export const createTask = async (req, res) => {
       return res.status(400).json({
         success: false,
         message: "Missing required fields: title, description, or userId",
-        received: req.body, // 👈 giúp debug dễ
+        received: req.body,
       });
     }
 

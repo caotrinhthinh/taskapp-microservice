@@ -75,62 +75,62 @@ const handleUserEvent = async (event) => {
     console.log("Error handling user event: ", error);
     throw error;
   }
+};
 
-  const handleTaskEvent = async (event) => {
-    try {
-      console.log("Processing task event:", event);
+const handleTaskEvent = async (event) => {
+  try {
+    console.log("Processing task event:", event);
 
-      const { eventType, taskId, userId, title, status } = event;
+    const { eventType, taskId, userId, title, status } = event;
 
-      let notification = null;
+    let notification = null;
 
-      switch (eventType) {
-        case "CREATED":
-          notification = new Notification({
-            userId,
-            type: "TASK_CREATED",
-            title: "New Task Created",
-            message: `You created a new task: "${title}"`,
-            metadata: {
-              taskId,
-              taskTitle: title,
-              eventType: "TASK_CREATED",
-            },
-          });
-          break;
+    switch (eventType) {
+      case "CREATED":
+        notification = new Notification({
+          userId,
+          type: "TASK_CREATED",
+          title: "New Task Created",
+          message: `You created a new task: "${title}"`,
+          metadata: {
+            taskId,
+            taskTitle: title,
+            eventType: "TASK_CREATED",
+          },
+        });
+        break;
 
-        case "UPDATED":
-          notification = new Notification({
-            userId,
-            type: "TASK_UPDATED",
-            title: "Task Updated",
-            message: `Task "${title}" has been updated. Status: ${status}`,
-            metadata: {},
-          });
-          break;
+      case "UPDATED":
+        notification = new Notification({
+          userId,
+          type: "TASK_UPDATED",
+          title: "Task Updated",
+          message: `Task "${title}" has been updated. Status: ${status}`,
+          metadata: {},
+        });
+        break;
 
-        case "DELETED":
-          notification = new Notification({
-            userId,
-            type: "TASK_DELETED",
-            title: "Task Deleted",
-            message: `Task "${title}" has been deleted.`,
-            metadata: { taskId, taskTitle: title, eventType: "TASK_DELETED" },
-          });
-          break;
+      case "DELETED":
+        notification = new Notification({
+          userId,
+          type: "TASK_DELETED",
+          title: "Task Deleted",
+          message: `Task "${title}" has been deleted.`,
+          metadata: { taskId, taskTitle: title, eventType: "TASK_DELETED" },
+        });
+        break;
 
-        default:
-          console.log("Unknown task event type:", eventType);
-          return;
-      }
-
-      if (notification) {
-        await notification.save();
-        console.log(`Notification created for user ${userId}`);
-      }
-    } catch (error) {
-      console.error("Error handling task event:", error);
-      throw error;
+      default:
+        console.log("Unknown task event type:", eventType);
+        return;
     }
-  };
+
+    if (notification) {
+      await notification.save();
+      console.log(`Notification created for user ${userId}`);
+    }
+  } catch (error) {
+    console.error("Error handling task event:", error);
+    throw error;
+  }
 };

@@ -3,8 +3,8 @@ import express from "express";
 import cors from "cors";
 import taskRoutes from "./routes/taskRoutes.js";
 import connectDatabase from "./config/database.js";
-import { connectRabbitMQ } from "config/rabbitmq.js";
-import { startUserEventConsumer } from "consumers/userEventConsumer.js";
+import { closeConnection, connectRabbitMQ } from "./config/rabbitmq.js";
+import { startUserEventConsumer } from "./consumers/userEventConsumer.js";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -65,16 +65,16 @@ const startServer = async () => {
 };
 
 // Graceful shutdown
-// process.on("SIGTERM", async () => {
-//   console.log("SIGTERM signal received: closing HTTP server");
-//   await closeConnection();
-//   process.exit(0);
-// });
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM signal received: closing HTTP server");
+  await closeConnection();
+  process.exit(0);
+});
 
-// process.on("SIGINT", async () => {
-//   console.log("SIGINT signal received: closing HTTP server");
-//   await closeConnection();
-//   process.exit(0);
-// });
+process.on("SIGINT", async () => {
+  console.log("SIGINT signal received: closing HTTP server");
+  await closeConnection();
+  process.exit(0);
+});
 
 startServer();
