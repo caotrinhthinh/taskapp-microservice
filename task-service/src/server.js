@@ -3,6 +3,8 @@ import express from "express";
 import cors from "cors";
 import taskRoutes from "./routes/taskRoutes.js";
 import connectDatabase from "./config/database.js";
+import { closeConnection, connectRabbitMQ } from "./config/rabbitmq.js";
+import { startUserEventConsumer } from "./consumers/userEventConsumer.js";
 
 // Load environment variables from .env file
 dotenv.config();
@@ -47,6 +49,9 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     await connectDatabase(); // Connect to MongoDB
+    await connectRabbitMQ();
+    await startUserEventConsumer();
+
     // 4. Start Express server
     app.listen(PORT, () => {
       console.log(`🚀 Task Service is running on port ${PORT}`);
@@ -60,16 +65,16 @@ const startServer = async () => {
 };
 
 // Graceful shutdown
-// process.on("SIGTERM", async () => {
-//   console.log("SIGTERM signal received: closing HTTP server");
-//   await closeConnection();
-//   process.exit(0);
-// });
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM signal received: closing HTTP server");
+  await closeConnection();
+  process.exit(0);
+});
 
-// process.on("SIGINT", async () => {
-//   console.log("SIGINT signal received: closing HTTP server");
-//   await closeConnection();
-//   process.exit(0);
-// });
+process.on("SIGINT", async () => {
+  console.log("SIGINT signal received: closing HTTP server");
+  await closeConnection();
+  process.exit(0);
+});
 
 startServer();

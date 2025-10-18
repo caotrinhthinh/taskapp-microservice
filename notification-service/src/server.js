@@ -3,6 +3,11 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDatabase from "./config/database.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
+import { connectRabbitMQ, closeConnection } from "./config/rabbitmq.js";
+import {
+  startTaskEventConsumer,
+  startUserEventConsumer,
+} from "./consumers/eventConsumers.js";
 
 dotenv.config();
 
@@ -42,6 +47,9 @@ app.use((err, req, res, next) => {
 const startServer = async () => {
   try {
     await connectDatabase();
+    await connectRabbitMQ();
+    await startUserEventConsumer();
+    await startTaskEventConsumer();
 
     app.listen(PORT, () => {
       console.log(`🚀 Notification Service is running on port ${PORT}`);
@@ -56,16 +64,16 @@ const startServer = async () => {
   }
 };
 
-// process.on("SIGTERM", async () => {
-//   console.log("SIGTERM signal received");
-//   await closeConnection();
-//   process.exit(0);
-// });
+process.on("SIGTERM", async () => {
+  console.log("SIGTERM signal received");
+  await closeConnection();
+  process.exit(0);
+});
 
-// process.on("SIGINT", async () => {
-//   console.log("SIGINT signal received");
-//   await closeConnection();
-//   process.exit(0);
-// });
+process.on("SIGINT", async () => {
+  console.log("SIGINT signal received");
+  await closeConnection();
+  process.exit(0);
+});
 
 startServer();
