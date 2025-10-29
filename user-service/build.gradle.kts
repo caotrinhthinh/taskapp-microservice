@@ -36,6 +36,17 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.springframework.amqp:spring-rabbit-test")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+	// Redis
+    implementation(org.springframework.boot:spring-boot-starter-data-redis)
+    
+    // JWT
+    implementation(io.jsonwebtoken:jjwt-api:0.12.3)
+    runtimeOnly(io.jsonwebtoken:jjwt-impl:0.12.3)
+    runtimeOnly(io.jsonwebtoken:jjwt-jackson:0.12.3)
+    
+    // Swagger/OpenAPI
+    implementation(org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0)
 }
 
 tasks.withType<Test> {
